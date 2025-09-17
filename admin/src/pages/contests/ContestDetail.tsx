@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useLocation } from 'react-router-dom'
 import { api } from '../../lib/api'
+import BlockchainProgress from '../../components/BlockchainProgress'
 
 type Auction = {
   id: number
@@ -26,10 +27,12 @@ type Bid = {
 
 export default function ContestDetail() {
   const { id } = useParams()
+  const location = useLocation()
   const [overview, setOverview] = useState<Auction | null>(null)
   const [bids, setBids] = useState<Bid[]>([])
   const [placing, setPlacing] = useState(false)
   const [amount, setAmount] = useState('')
+  const [showChain, setShowChain] = useState(false)
   const [tab, setTab] = useState<'overview'|'purchases'>('overview')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -54,6 +57,12 @@ export default function ContestDetail() {
       }
     })()
   }, [id])
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const t = params.get('tab')
+    if (t === 'purchases') setTab('purchases')
+  }, [location.search])
 
   const getStatusColor = (status?: Auction['status']) => {
     if (status === 'active') return 'bg-green-100 text-green-700'
@@ -187,13 +196,12 @@ export default function ContestDetail() {
                   onClick={async () => {
                     if (!overview) return
                     setPlacing(true)
+                    setShowChain(true)
                     try {
                       const bidderId = Number(localStorage.getItem('auth_user_id') || '2') || 2
-                      await api.post('/bids/place', {
-                        auction_id: overview.id,
-                        amount: Number(amount),
-                        bidder_id: bidderId,
-                      })
+                      // Simulate on-chain then call API
+                      await new Promise(res => setTimeout(res, 1200))
+                      await api.post('/bids/place', { auction_id: overview.id, amount: Number(amount), bidder_id: bidderId })
                       const bidsRes = await api.get(`/auctions/${overview.id}/bids`)
                       setBids(bidsRes.data)
                       setAmount('')
@@ -201,6 +209,7 @@ export default function ContestDetail() {
                       alert(e?.response?.data?.detail || 'Failed to place bid')
                     } finally {
                       setPlacing(false)
+                      setShowChain(false)
                     }
                   }}
                   className="px-4 py-2 bg-gradient-to-r from-primary to-yellow-500 text-white rounded-lg hover:shadow-lg transition-all duration-200 disabled:opacity-50"
@@ -213,6 +222,12 @@ export default function ContestDetail() {
           )}
         </div>
       </div>
+
+      <BlockchainProgress
+        open={showChain}
+        onClose={() => setShowChain(false)}
+        title="Submitting Bid On-Chain"
+      />
 
       {/* Tabs */}
       <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { api } from '../../lib/api'
+import BlockchainProgress from '../../components/BlockchainProgress'
 
 export default function CreateContest() {
   const nav = useNavigate()
@@ -13,6 +14,7 @@ export default function CreateContest() {
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showChain, setShowChain] = useState(false)
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -20,6 +22,8 @@ export default function CreateContest() {
     setLoading(true)
     try {
       const sellerId = Number(localStorage.getItem('auth_user_id') || '0') || 1
+      setShowChain(true)
+      await new Promise(res => setTimeout(res, 4000))
       await api.post('/auctions/create', {
         product_name: form.product_name,
         description: form.description,
@@ -33,6 +37,7 @@ export default function CreateContest() {
       setError(e?.response?.data?.detail || 'Failed to create contest')
     } finally {
       setLoading(false)
+      setShowChain(false)
     }
   }
 
@@ -323,6 +328,19 @@ export default function CreateContest() {
           </div>
         </div>
       </div>
+      <BlockchainProgress 
+        open={showChain} 
+        onClose={() => {}} 
+        title="Creating Auction On-Chain"
+        steps={[
+          { key: 'prepare', label: 'Preparing on-chain transaction', durationMs: 1200 },
+          { key: 'sign', label: 'Awaiting signature', durationMs: 1500 },
+          { key: 'broadcast', label: 'Broadcasting to network', durationMs: 1500 },
+          { key: 'mempool', label: 'Mempool propagation', durationMs: 1500 },
+          { key: 'confirm1', label: 'Confirmations (1/2)', durationMs: 1500 },
+          { key: 'confirm2', label: 'Confirmations (2/2)', durationMs: 1500 },
+        ]}
+      />
     </div>
   )
 }
@@ -350,5 +368,9 @@ function Field({ label, description, children, required }: {
     </label>
   )
 }
+
+// Blockchain modal at root mount
+// Note: place at bottom to render above page
+;(() => {})()
 
 

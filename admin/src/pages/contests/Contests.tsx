@@ -164,11 +164,15 @@ export default function Contests() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <h3 className="text-xl font-bold mb-2">{auction.product_name}</h3>
-                  <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${
+                  <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
                     getStatusColor(auction.status)
                   }`}>
                     <div className={`w-2 h-2 rounded-full ${auction.status === 'active' ? 'bg-green-500' : auction.status === 'winner_selected' ? 'bg-purple-500' : 'bg-yellow-500'}`}></div>
                     {getStatusText(auction.status)}
+                    <span className="ml-2 inline-flex items-center gap-1 text-xs bg-white/20 px-2 py-0.5 rounded-full">
+                      <span>⛓️</span>
+                      <span>On-chain</span>
+                    </span>
                   </div>
                 </div>
                 <div className="text-right">
@@ -227,7 +231,7 @@ export default function Contests() {
                     View Details
                   </Link>
                   <Link
-                    to={`/contests/${auction.id}/prize-structure`}
+                    to={`/contests/${auction.id}?tab=purchases`}
                     className="px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all duration-200 text-sm font-medium text-center"
                   >
                     View Bids
@@ -235,7 +239,7 @@ export default function Contests() {
                 </div>
                 <div className="mt-2 flex gap-2">
                   <Link
-                    to={`/contests/${auction.id}/draw`}
+                    to={`/contests/${auction.id}?tab=purchases`}
                     className="flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:shadow-lg transition-all duration-200 text-sm font-medium text-center"
                   >
                     Auction Bids

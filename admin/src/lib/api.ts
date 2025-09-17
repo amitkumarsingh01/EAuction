@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const api = axios.create({
-  baseURL: 'http://localhost:9159',
+  baseURL: 'https://eauction.iaks.site/',
 })
 
 // Attach bearer token if present
