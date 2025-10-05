@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../../lib/api'
+import BlockchainAuction from '../../components/BlockchainAuction'
+import BlockchainStatus from '../../components/BlockchainStatus'
 
 type Auction = {
   id: number
@@ -277,6 +279,25 @@ export default function Contests() {
           </Link>
         </div>
       )}
+
+      {/* Blockchain Integration Section */}
+      <div className="mt-12">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+            ⛓️
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800">Blockchain Auctions</h2>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1">
+            <BlockchainStatus showDetails={true} />
+          </div>
+          <div className="lg:col-span-2">
+            <BlockchainAuction auctionId="live-auction-1" />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

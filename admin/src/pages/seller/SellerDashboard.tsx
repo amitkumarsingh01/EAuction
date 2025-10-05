@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { api } from '../../lib/api'
+import BlockchainAuction from '../../components/BlockchainAuction'
+import BlockchainTransactionTracker from '../../components/BlockchainTransactionTracker'
 
 export default function SellerDashboard() {
   const [data, setData] = useState<any>(null)
@@ -65,6 +67,21 @@ export default function SellerDashboard() {
           </div>
         )}
       </Section>
+
+      {/* Blockchain Integration for Sellers */}
+      <div className="mt-8">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+            ⛓️
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800">Blockchain Auctions</h2>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <BlockchainAuction auctionId="seller-auction-1" />
+          <BlockchainTransactionTracker />
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 import { api } from '../lib/api'
 import type { AdminDashboard } from '../lib/api'
+import BlockchainAuction from '../components/BlockchainAuction'
+import BlockchainStatus from '../components/BlockchainStatus'
+import BlockchainActivityFeed from '../components/BlockchainActivityFeed'
+import BlockchainTransactionTracker from '../components/BlockchainTransactionTracker'
 
 export default function Dashboard() {
   const [data, setData] = useState<AdminDashboard | null>(null)
@@ -126,26 +130,30 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* Quick Actions */}
-      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <button className="flex items-center gap-3 p-4 bg-gradient-to-r from-primary to-yellow-500 text-white rounded-xl hover:shadow-lg transition-all duration-200 group">
-            <span className="text-2xl group-hover:scale-110 transition-transform">➕</span>
-            <span className="font-semibold">Create Contest</span>
-          </button>
-          <button className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 group">
-            <span className="text-2xl group-hover:scale-110 transition-transform">👥</span>
-            <span className="font-semibold">View Users</span>
-          </button>
-          <button className="flex items-center gap-3 p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 group">
-            <span className="text-2xl group-hover:scale-110 transition-transform">💰</span>
-            <span className="font-semibold">Withdrawals</span>
-          </button>
-          <button className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 group">
-            <span className="text-2xl group-hover:scale-110 transition-transform">🖼️</span>
-            <span className="font-semibold">Manage Sliders</span>
-          </button>
+      {/* Blockchain Auction Demo */}
+      <div className="mt-8">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+            ⛓️
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800">Blockchain Integration</h2>
+        </div>
+        
+        {/* Blockchain Status Overview */}
+        <div className="mb-8">
+          <BlockchainStatus showDetails={true} />
+        </div>
+
+        {/* Blockchain Components Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <BlockchainActivityFeed />
+          <BlockchainTransactionTracker />
+        </div>
+
+        {/* Blockchain Auction Demo */}
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">Live Auction Demo</h3>
+          <BlockchainAuction auctionId="demo-auction-1" />
         </div>
       </div>
     </div>

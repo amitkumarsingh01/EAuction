@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { clearAuth } from '../lib/api'
+import MetaMaskButton from '../components/MetaMaskButton'
+import BlockchainStatus from '../components/BlockchainStatus'
 
 const nav = [
   { to: '/', label: 'Admin Dashboard', icon: '📊', description: 'Overview & Analytics' },
+  { to: '/blockchain', label: 'Blockchain', icon: '⛓️', description: 'Blockchain Dashboard' },
   { to: '/contests', label: 'Auctions', icon: '🎯', description: 'Auctions Management' },
   { to: '/users', label: 'Users', icon: '👥', description: 'User Management' },
-  { to: '/notifications', label: 'Notifications', icon: '🔔', description: 'System messages' },
   { to: '/buyer', label: 'Buyer', icon: '🛒', description: 'Buyer dashboards' },
   { to: '/seller', label: 'Seller', icon: '🏷️', description: 'Seller dashboards' },
 ]
@@ -63,6 +65,11 @@ export default function DashboardLayout() {
               ))}
             </nav>
             
+            {/* Blockchain Status */}
+            <div className="mt-6">
+              <BlockchainStatus showDetails={false} />
+            </div>
+            
             <div className="mt-8 pt-6 border-t border-gray-200">
               <button 
                 onClick={logout} 
@@ -110,6 +117,8 @@ function TopBar() {
       </div>
       
       <div className="flex items-center gap-4">
+        <MetaMaskButton showBalance={true} />
+        
         <div className="relative">
           
           {showImpersonate && (
