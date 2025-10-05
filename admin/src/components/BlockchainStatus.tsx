@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useWallet } from '../contexts/WalletContext'
 
 interface BlockchainStatusProps {
@@ -19,7 +19,6 @@ interface Transaction {
 export default function BlockchainStatus({ showDetails = false, className = '' }: BlockchainStatusProps) {
   const { isConnected, account, balance } = useWallet()
   const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [isLoading, setIsLoading] = useState(false)
   const [lastUpdate, setLastUpdate] = useState<number>(Date.now())
 
   // Simulate real-time transaction updates

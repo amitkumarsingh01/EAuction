@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useWallet } from '../contexts/WalletContext'
 
 interface BlockchainEvent {
@@ -80,8 +80,11 @@ export default function BlockchainActivityFeed() {
   }, [isConnected, isLive, account])
 
   const createMockEvent = (type: BlockchainEvent['type']): BlockchainEvent => {
-    const baseEvent = {
+    const baseEvent: BlockchainEvent = {
       id: `event-${Date.now()}`,
+      type,
+      title: '',
+      description: '',
       timestamp: Date.now(),
       status: 'success' as const
     }

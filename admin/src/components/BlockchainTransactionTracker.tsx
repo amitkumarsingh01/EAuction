@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useWallet } from '../contexts/WalletContext'
 
 interface TransactionStep {
@@ -28,7 +28,6 @@ interface BlockchainTransaction {
 export default function BlockchainTransactionTracker() {
   const { isConnected, account } = useWallet()
   const [transactions, setTransactions] = useState<BlockchainTransaction[]>([])
-  const [activeTransaction, setActiveTransaction] = useState<BlockchainTransaction | null>(null)
 
   useEffect(() => {
     if (!isConnected) return
@@ -123,7 +122,6 @@ export default function BlockchainTransactionTracker() {
       if (Math.random() > 0.8) {
         const newTx = createMockTransaction()
         setTransactions(prev => [newTx, ...prev])
-        setActiveTransaction(newTx)
         
         // Simulate transaction progress
         simulateTransactionProgress(newTx.id)
@@ -199,6 +197,9 @@ export default function BlockchainTransactionTracker() {
   }
 
   const simulateTransactionProgress = (txId: string) => {
+    const targetTx = transactions.find(tx => tx.id === txId)
+    if (!targetTx) return
+
     setTransactions(prev => prev.map(tx => {
       if (tx.id === txId) {
         const updatedSteps = tx.steps.map((step, index) => {
@@ -231,13 +232,13 @@ export default function BlockchainTransactionTracker() {
 
     // Mark as confirmed after all steps
     setTimeout(() => {
-      setTransactions(prev => prev.map(tx => {
-        if (tx.id === txId) {
-          return { ...tx, status: 'confirmed' as const }
+      setTransactions(prev => prev.map(transaction => {
+        if (transaction.id === txId) {
+          return { ...transaction, status: 'confirmed' as const }
         }
-        return tx
+        return transaction
       }))
-    }, tx.steps.length * 2000 + 1000)
+    }, targetTx.steps.length * 2000 + 1000)
   }
 
   const generateTxHash = () => {
