@@ -1,0 +1,15 @@
+Blockchain
+cd blockchain
+npm install 
+npm run compile
+npm run node
+
+Frontend
+cd frontend
+npm install #one time
+npm run dev
+
+
+Backend
+cd backend
+python main.py
