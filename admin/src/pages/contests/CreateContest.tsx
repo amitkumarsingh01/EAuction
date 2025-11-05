@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { api } from '../../lib/api'
 import BlockchainProgress from '../../components/BlockchainProgress'
-import BlockchainStatus from '../../components/BlockchainStatus'
 import { useWallet } from '../../contexts/WalletContext'
 
 export default function CreateContest() {
