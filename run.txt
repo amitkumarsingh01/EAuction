@@ -5,7 +5,7 @@ npm run compile
 npm run node
 
 Frontend
-cd frontend
+cd admin
 npm install #one time
 npm run dev
 
