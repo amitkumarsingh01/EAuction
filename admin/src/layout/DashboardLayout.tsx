@@ -3,18 +3,20 @@ import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { clearAuth } from '../lib/api'
 import MetaMaskButton from '../components/MetaMaskButton'
 import BlockchainStatus from '../components/BlockchainStatus'
+import { useWallet } from '../contexts/WalletContext'
 
 const nav = [
-  { to: '/', label: 'Admin Dashboard', icon: '📊', description: 'Overview & Analytics' },
-  { to: '/blockchain', label: 'Blockchain', icon: '⛓️', description: 'Blockchain Dashboard' },
-  { to: '/contests', label: 'Auctions', icon: '🎯', description: 'Auctions Management' },
-  { to: '/users', label: 'Users', icon: '👥', description: 'User Management' },
-  { to: '/buyer', label: 'Buyer', icon: '🛒', description: 'Buyer dashboards' },
-  { to: '/seller', label: 'Seller', icon: '🏷️', description: 'Seller dashboards' },
+  { to: '/', label: 'Admin Dashboard', icon: '📊', description: 'Overview & Analytics', blockchain: true },
+  { to: '/blockchain', label: 'Blockchain', icon: '⛓️', description: 'Blockchain Dashboard', blockchain: true },
+  { to: '/contests', label: 'Auctions', icon: '🎯', description: 'Auctions Management', blockchain: true },
+  { to: '/users', label: 'Users', icon: '👥', description: 'User Management', blockchain: true },
+  { to: '/buyer', label: 'Buyer', icon: '🛒', description: 'Buyer dashboards', blockchain: true },
+  { to: '/seller', label: 'Seller', icon: '🏷️', description: 'Seller dashboards', blockchain: true },
 ]
 
 export default function DashboardLayout() {
   const navigate = useNavigate()
+  const { isConnected } = useWallet()
 
   const logout = () => {
     clearAuth()
@@ -27,14 +29,25 @@ export default function DashboardLayout() {
         <aside className="bg-white shadow-2xl border-r border-gray-200">
           <div className="p-6">
             <Link to="/" className="flex items-center gap-3 mb-8 group">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-yellow-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-yellow-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 relative">
                 <span className="text-white font-bold text-xl">B</span>
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xs animate-pulse">
+                  ⛓️
+                </div>
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent flex items-center gap-2">
                   E Auction
+                  {isConnected && (
+                    <span className="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded-full">
+                      ⛓️ Connected
+                    </span>
+                  )}
                 </h1>
-                <p className="text-sm text-gray-500">Auction Management</p>
+                <p className="text-sm text-gray-500 flex items-center gap-1">
+                  Auction Management
+                  <span className="text-xs">• Blockchain</span>
+                </p>
               </div>
             </Link>
             
@@ -52,15 +65,29 @@ export default function DashboardLayout() {
                     }`
                   }
                 >
-                  <span className="text-2xl group-hover:scale-110 transition-transform duration-200">
-                    {n.icon}
-                  </span>
-                  <div className="flex-1">
-                    <div className="font-semibold">{n.label}</div>
-                    <div className={`text-xs ${nav.find(nav => nav.to === n.to)?.to === '/' ? 'text-white/80' : 'text-gray-500'}`}>
-                      {n.description}
-                    </div>
-                  </div>
+                  {({ isActive }) => (
+                    <>
+                      <span className="text-2xl group-hover:scale-110 transition-transform duration-200">
+                        {n.icon}
+                      </span>
+                      <div className="flex-1">
+                        <div className="font-semibold flex items-center gap-2">
+                          {n.label}
+                          {n.blockchain && (
+                            <span className={`text-xs px-1.5 py-0.5 ${isActive ? 'bg-white/20' : 'bg-purple-100 text-purple-700'} rounded-full`}>
+                              ⛓️
+                            </span>
+                          )}
+                        </div>
+                        <div className={`text-xs ${isActive ? 'text-white/80' : 'text-gray-500'} flex items-center gap-1`}>
+                          {n.description}
+                          {n.blockchain && (
+                            <span className={`text-xs ${isActive ? 'text-white/70' : 'text-purple-600'}`}>• Blockchain</span>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </NavLink>
               ))}
             </nav>

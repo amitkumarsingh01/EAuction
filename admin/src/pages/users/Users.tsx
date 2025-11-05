@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../../lib/api'
+import BlockchainStatus from '../../components/BlockchainStatus'
+import { useWallet } from '../../contexts/WalletContext'
 
 type User = {
   id: number
@@ -16,6 +18,7 @@ export default function Users() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid')
+  const { isConnected } = useWallet()
 
   const load = async () => {
     setLoading(true)
@@ -124,8 +127,25 @@ export default function Users() {
             <span className="w-2 h-2 bg-green-500 rounded-full"></span>
             <span>Active: {items.filter(u => u.is_active !== false).length}</span>
           </div>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
+            <span>⛓️ Blockchain Users: {items.length}</span>
+          </div>
         </div>
       </div>
+
+      {/* Blockchain Status Section */}
+      {isConnected && (
+        <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-6 shadow-lg border border-purple-200">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+              ⛓️
+            </div>
+            <h2 className="text-xl font-bold text-gray-800">Blockchain User Management</h2>
+          </div>
+          <BlockchainStatus showDetails={false} />
+        </div>
+      )}
 
       {/* Content */}
       {viewMode === 'grid' ? (
@@ -164,10 +184,14 @@ export default function Users() {
                   <span className="text-lg">🧑‍💻</span>
                   <span>{user.user_type}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <span className="text-lg">🆔</span>
-                  <span>ID: {user.id}</span>
-                </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <span className="text-lg">🆔</span>
+                    <span>ID: {user.id}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-purple-600 font-medium">
+                    <span className="text-lg">⛓️</span>
+                    <span>On-Chain User</span>
+                  </div>
               </div>
               
               <div className="flex items-center justify-between pt-4 border-t border-gray-100">
@@ -206,7 +230,13 @@ export default function Users() {
                           {user.email?.charAt(0)?.toUpperCase() || 'U'}
                         </div>
                         <div>
-                          <div className="font-semibold text-gray-800">{user.email}</div>
+                          <div className="font-semibold text-gray-800 flex items-center gap-2">
+                            {user.email}
+                            <span className="text-xs px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full flex items-center gap-1">
+                              <span>⛓️</span>
+                              <span>Chain</span>
+                            </span>
+                          </div>
                           <div className="text-sm text-gray-500">ID: {user.id}</div>
                         </div>
                       </div>

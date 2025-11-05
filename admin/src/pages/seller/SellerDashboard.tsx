@@ -2,12 +2,16 @@ import { useEffect, useState } from 'react'
 import { api } from '../../lib/api'
 import BlockchainAuction from '../../components/BlockchainAuction'
 import BlockchainTransactionTracker from '../../components/BlockchainTransactionTracker'
+import BlockchainStatus from '../../components/BlockchainStatus'
+import BlockchainActivityFeed from '../../components/BlockchainActivityFeed'
+import { useWallet } from '../../contexts/WalletContext'
 
 export default function SellerDashboard() {
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const userId = Number(localStorage.getItem('auth_user_id') || '1')
+  const { isConnected } = useWallet()
 
   useEffect(() => {
     (async () => {
@@ -28,6 +32,19 @@ export default function SellerDashboard() {
   return (
     <div className="space-y-8">
       <Header title="Seller Dashboard" subtitle="Overview of your auctions" icon="🏷️" />
+
+      {/* Blockchain Status */}
+      {isConnected && (
+        <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-6 shadow-lg border border-purple-200">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+              ⛓️
+            </div>
+            <h2 className="text-xl font-bold text-gray-800">Blockchain Seller Dashboard</h2>
+          </div>
+          <BlockchainStatus showDetails={true} />
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <StatCard icon="📦" label="Total Auctions" value={data.total_auctions} color="from-blue-500 to-blue-600" />
@@ -75,12 +92,21 @@ export default function SellerDashboard() {
             ⛓️
           </div>
           <h2 className="text-2xl font-bold text-gray-800">Blockchain Auctions</h2>
+          <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
+            Live
+          </span>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <BlockchainAuction auctionId="seller-auction-1" />
-          <BlockchainTransactionTracker />
+          <BlockchainActivityFeed />
         </div>
+        
+        {isConnected && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <BlockchainTransactionTracker />
+          </div>
+        )}
       </div>
     </div>
   )

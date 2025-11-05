@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { api } from '../../lib/api'
 import BlockchainProgress from '../../components/BlockchainProgress'
+import BlockchainStatus from '../../components/BlockchainStatus'
+import { useWallet } from '../../contexts/WalletContext'
 
 export default function CreateContest() {
   const nav = useNavigate()
@@ -15,6 +17,7 @@ export default function CreateContest() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [showChain, setShowChain] = useState(false)
+  const { isConnected } = useWallet()
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -198,6 +201,11 @@ export default function CreateContest() {
                     <div className="flex items-center justify-center gap-2">
                       <span className="text-xl">🎯</span>
                       Create Auction
+                      {isConnected && (
+                        <span className="text-xs px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full">
+                          ⛓️
+                        </span>
+                      )}
                     </div>
                   )}
                 </button>

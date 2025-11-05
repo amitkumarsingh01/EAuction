@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import { useParams, Link, useLocation } from 'react-router-dom'
 import { api } from '../../lib/api'
 import BlockchainProgress from '../../components/BlockchainProgress'
+import BlockchainStatus from '../../components/BlockchainStatus'
+import BlockchainTransactionTracker from '../../components/BlockchainTransactionTracker'
+import { useWallet } from '../../contexts/WalletContext'
 
 type Auction = {
   id: number
@@ -36,6 +39,7 @@ export default function ContestDetail() {
   const [tab, setTab] = useState<'overview'|'purchases'>('overview')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const { isConnected } = useWallet()
 
   useEffect(() => {
     (async () => {
@@ -129,6 +133,10 @@ export default function ContestDetail() {
                 <h2 className="text-3xl font-bold">{overview?.product_name}</h2>
                 <div className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(overview?.status)}`}>
                   {getStatusText(overview?.status)}
+                </div>
+                <div className="px-3 py-1 rounded-full text-sm font-medium bg-white/20 backdrop-blur-sm flex items-center gap-1">
+                  <span>⛓️</span>
+                  <span>On-Chain Auction</span>
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -262,12 +270,25 @@ export default function ContestDetail() {
           {tab === 'overview' && (
             <div className="space-y-8">
               <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-bold text-gray-800">Contest Overview</h3>
+                <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                  Contest Overview
+                  <span className="text-lg">⛓️</span>
+                </h3>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="text-sm text-gray-600">Live Data</span>
+                  <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm text-purple-600 font-medium">Blockchain</span>
                 </div>
               </div>
+
+              {/* Blockchain Status */}
+              {isConnected && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <BlockchainStatus showDetails={true} />
+                  <BlockchainTransactionTracker />
+                </div>
+              )}
               
               {/* Quick Stats */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -315,8 +336,16 @@ export default function ContestDetail() {
           {tab === 'purchases' && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-bold text-gray-800">Bid History</h3>
-                <div className="text-sm text-gray-600">{bids.length} total bids</div>
+                <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                  Bid History
+                  <span className="text-lg">⛓️</span>
+                </h3>
+                <div className="text-sm text-gray-600 flex items-center gap-2">
+                  {bids.length} total bids
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
+                    On-Chain
+                  </span>
+                </div>
               </div>
 
               {bids.length === 0 ? (
@@ -334,14 +363,25 @@ export default function ContestDetail() {
                           <th className="text-left p-6 font-semibold text-gray-700">Bidder ID</th>
                           <th className="text-left p-6 font-semibold text-gray-700">Amount</th>
                           <th className="text-left p-6 font-semibold text-gray-700">Time</th>
+                          <th className="text-left p-6 font-semibold text-gray-700">Status</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-100">
                         {bids.map((b: Bid) => (
                           <tr key={b.id} className="hover:bg-gray-50 transition-colors">
-                            <td className="p-6">{b.bidder_id}</td>
-                            <td className="p-6">₹{b.amount}</td>
+                            <td className="p-6 flex items-center gap-2">
+                              {b.bidder_id}
+                              <span className="text-xs px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full">
+                                ⛓️
+                              </span>
+                            </td>
+                            <td className="p-6 font-semibold text-green-700">₹{b.amount}</td>
                             <td className="p-6">{new Date(b.bid_time).toLocaleString()}</td>
+                            <td className="p-6">
+                              <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                                ✓ Confirmed
+                              </span>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -357,6 +397,7 @@ export default function ContestDetail() {
     </div>
   )
 }
+
 
 
 

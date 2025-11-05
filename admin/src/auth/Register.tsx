@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { api, saveAuth } from '../lib/api'
+import MetaMaskButton from '../components/MetaMaskButton'
+import BlockchainStatus from '../components/BlockchainStatus'
 
 export default function Register() {
   const navigate = useNavigate()
@@ -33,13 +35,21 @@ export default function Register() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-gradient-to-br from-primary to-yellow-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
+          <div className="w-20 h-20 bg-gradient-to-br from-primary to-yellow-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl relative">
             <span className="text-4xl text-white">🛍️</span>
+            <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xs animate-pulse">
+              ⛓️
+            </div>
           </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-2">
             E Auction
           </h1>
-          <p className="text-gray-600 text-lg">Create your account</p>
+          <p className="text-gray-600 text-lg flex items-center justify-center gap-2">
+            Create your account
+            <span className="px-2 py-1 bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 rounded-full text-xs font-medium">
+              ⛓️ Blockchain Powered
+            </span>
+          </p>
         </div>
 
         <div className="bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
@@ -131,6 +141,22 @@ export default function Register() {
                 <Link to="/login" className="text-primary font-medium">Sign in</Link>
               </div>
             </form>
+
+            {/* Blockchain Integration */}
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <div className="mb-4">
+                <div className="flex items-center gap-2 justify-center mb-3">
+                  <span className="text-lg">⛓️</span>
+                  <span className="text-sm font-medium text-gray-700">Connect Blockchain Wallet</span>
+                </div>
+                <div className="flex justify-center">
+                  <MetaMaskButton />
+                </div>
+              </div>
+              <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-4 border border-purple-200">
+                <BlockchainStatus showDetails={false} className="border-0 shadow-none bg-transparent" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
