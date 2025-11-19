@@ -4,6 +4,7 @@ import BlockchainAuction from '../../components/BlockchainAuction'
 import BlockchainTransactionTracker from '../../components/BlockchainTransactionTracker'
 import BlockchainStatus from '../../components/BlockchainStatus'
 import BlockchainActivityFeed from '../../components/BlockchainActivityFeed'
+import NetworkNodes from '../../components/NetworkNodes'
 import { useWallet } from '../../contexts/WalletContext'
 
 export default function SellerDashboard() {
@@ -84,6 +85,11 @@ export default function SellerDashboard() {
           </div>
         )}
       </Section>
+
+      {/* Network Nodes Visualization */}
+      <div className="mt-8">
+        <NetworkNodes />
+      </div>
 
       {/* Blockchain Integration for Sellers */}
       <div className="mt-8">

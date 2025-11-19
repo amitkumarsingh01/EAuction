@@ -5,6 +5,7 @@ import BlockchainAuction from '../components/BlockchainAuction'
 import BlockchainStatus from '../components/BlockchainStatus'
 import BlockchainActivityFeed from '../components/BlockchainActivityFeed'
 import BlockchainTransactionTracker from '../components/BlockchainTransactionTracker'
+import NetworkNodes from '../components/NetworkNodes'
 
 export default function Dashboard() {
   const [data, setData] = useState<AdminDashboard | null>(null)
@@ -128,6 +129,11 @@ export default function Dashboard() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Network Nodes Visualization */}
+      <div className="mt-8">
+        <NetworkNodes />
       </div>
 
       {/* Blockchain Auction Demo */}
